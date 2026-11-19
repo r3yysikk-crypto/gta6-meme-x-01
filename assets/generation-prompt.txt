@@ -1,0 +1,31 @@
+Image-generation prompt used for the meme's base scene (assets/base.png).
+The image model received the make.fun logo mark (assets/mark-1024.png) as a
+visual reference for the ghost, plus this text prompt. No text was requested
+in the generated image; the caption was added afterwards with
+compose_meme.py (PIL), so every letter is exact.
+
+---
+Funny original meme illustration, square 1:1, bright cheerful 3D cartoon
+render style. A big modern open-plan office in the morning, rows of EMPTY
+desks with abandoned coffee cups, jackets draped over chairs and little
+sticky notes, nobody there. In the middle, at one desk, sits the cute white
+sheet ghost from the reference image (round friendly white ghost with
+sparkle eyes, magenta pink accents) wearing tiny headphones, happily
+playing a video game on a big monitor that shows a sunny neon Vice City
+street with palm trees and pastel skyscrapers. On the office wall behind, a
+large wall calendar showing May 2026 with one date circled in red. Warm
+morning sunlight through windows, clean composition with the ghost and
+monitor as the clear focal point in the center, some plain ceiling space at
+the top and plain floor at the bottom. Absolutely no text, no words, no
+letters, no numbers anywhere in the image.
+---
+
+Caption added by compose_meme.py (Liberation Sans Bold, white with black
+outline, 76pt):
+  top:    "MAY 26, 2026:" / "GTA VI LAUNCH DAY"
+  bottom: "THE WHOLE OFFICE" / "CALLED IN SICK."
+  badge:  make.fun logo mark (assets/mark-1024.png), top-right corner.
+
+Joke: GTA VI launches May 26, 2026, and (as with every big GTA launch)
+everyone calls in sick that day — except the make.fun ghost, who is
+already sitting at the office desk playing in Vice City.
