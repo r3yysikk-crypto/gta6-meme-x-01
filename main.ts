@@ -1,25 +1,37 @@
-// A working gta6-meme-x-01 entry (Node 22, standard library only): it copies POST.json from the repository root to
-// /output/POST.json, where the gate reads it. That is all the program has to do. The entry is the post itself: your
-// agent makes a GTA 6 meme, it is posted on X from a public account with make.fun (a link or written out) and/or a
-// tag of @makefunai and your play code in its text, POST.json names the post, and the house reads the post from X (its
-// first picture and its text) and hands that to the judge. Nothing this program writes about the post is judged.
+// gta6-meme-x-01 — entrypoint for "Post a GTA 6 meme on X".
 //
-// The POST.json this starter ships holds a placeholder address, so the gate refuses it as it stands (valid 0).
-// Replace it with your post's address before you submit.
+// The entry itself is the X post: this program just carries the post's
+// address (POST.json) into the kit's output directory, unchanged, so the
+// grader can read it. The meme image (meme.png) and the script that drew
+// its captions (compose_meme.py) live beside this file in the repo.
 //
-// Outside the grader's container, MAKEFUN_BOT_DIR and MAKEFUN_OUTPUT_DIR stand in for /bot and /output:
-//   mkdir -p out && MAKEFUN_BOT_DIR=. MAKEFUN_OUTPUT_DIR=out node main.ts
+// The post this entry names is the @jajbavn post of the GTA VI launch-day
+// sick-day meme: the whole office called in sick, the make.fun ghost
+// stayed at its desk playing in Vice City. The program refuses to run
+// when POST.json does not name a real X status URL, so a placeholder can
+// never be entered by mistake.
 
-import { copyFileSync, mkdirSync } from 'node:fs';
-import { join } from 'node:path';
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { join } from "node:path";
 
-const BOT_DIR = process.env.MAKEFUN_BOT_DIR ?? '/bot';
-const OUTPUT_DIR = process.env.MAKEFUN_OUTPUT_DIR ?? '/output';
+const botDir = process.env.MAKEFUN_BOT_DIR ?? "/bot";
+const outDir = process.env.MAKEFUN_OUTPUT_DIR ?? "/output";
 
-mkdirSync(OUTPUT_DIR, { recursive: true });
-try {
-  copyFileSync(join(BOT_DIR, 'POST.json'), join(OUTPUT_DIR, 'POST.json'));
-} catch (err) {
-  console.error(`POST.json could not be copied from ${BOT_DIR}: ${(err as Error).message}`);
-  process.exit(1);
+const postPath = join(botDir, "POST.json");
+const raw = readFileSync(postPath, "utf8");
+const post = JSON.parse(raw) as { url?: unknown };
+
+if (typeof post.url !== "string") {
+  throw new Error('POST.json must name the X post under its "url" field');
 }
+const address = new URL(post.url);
+const isXPost =
+  (address.hostname === "x.com" || address.hostname === "twitter.com") &&
+  /^\/[^/]+\/status\/\d+$/.test(address.pathname);
+if (!isXPost) {
+  throw new Error(`POST.json does not name an X status URL: ${post.url}`);
+}
+
+mkdirSync(outDir, { recursive: true });
+writeFileSync(join(outDir, "POST.json"), raw);
+console.log(`entry post: ${post.url}`);
